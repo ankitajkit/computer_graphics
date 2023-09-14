@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebGL 3D Cube Drawing</title>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+    <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
+    <script type="text/javascript" src="assignment2.js"></script>
+    <style>
+        input[type="range"] {
+          width: 400px;
+        }
+    </style>
+  </head>
+
+  <body onload="webGLStart();">
+    <canvas
+      id="assignment2"
+      style="border: none"
+      width="1050"
+      height="350"
+    ></canvas>  
+    <h2><p><span style="margin-right: 60px;"></span>Flat (per-face) shading<span style="margin-right: 60px;"></span>Gouraud (per-vertex) shading<span style="margin-right: 60px;"></span>Phong (per-fragment) shading</p></h2>
+    <div class="sliders">
+      <label for="slider">Control Camera Zoom : </label>
+      <input
+        autocomplete="off"
+        type="range"
+        min="0"
+        max="10"
+        step="0.00001"
+        value="0"
+        id="sliderZoomId"
+      />
+    </div>
+    <div class="sliders">
+        <label for="slider">Control Light Position : </label>
+        <input
+          autocomplete="off"
+          type="range"
+          min="-150"
+          max="100"
+          step="0.00001"
+          value="0"
+          id="sliderLightId"
+        />
+      </div>
+  </body>
+</html>
