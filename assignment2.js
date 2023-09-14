@@ -88,7 +88,7 @@ void main() {
 
   float Cd = 1.3*max(0.0,dot(normal,L));
   float Cs = 1.3*pow(max(0.0,dot(R,V)),16.0);
-  vec3 perFragColor = vec3((0.2 + Cd  + Cs)*objColor);
+  vec3 perFragColor = vec3((0.2*objColor + Cd*objColor  + Cs));
   fragColor = vec4(perFragColor, 1.0); 
 }`;
 // Vertex shader code
@@ -106,7 +106,8 @@ mat3 NormalTransformation;
 vec3 posInEyeSpace;
 vec3 L,R,V,normal;
 
-out vec4 vertexColor;
+out float Cd;
+out float Cs;
 
 void main() {
   
@@ -120,10 +121,9 @@ void main() {
   R = normalize(-reflect(L,normal));
   V = normalize(-posInEyeSpace);
 
-  float Cd = 1.3*max(0.0,dot(normal,L));
-  float Cs = 1.3*pow(max(0.0,dot(R,V)),16.0);
-  vec3 perVertexColor = vec3(0.2 + Cd + Cs);
-  vertexColor = vec4(perVertexColor, 1.0);
+  Cd = 1.3*max(0.0,dot(normal,L));
+  Cs = 1.3*pow(max(0.0,dot(R,V)),16.0);
+
   gl_PointSize = 5.0; 
 }`;
 // Fragment shader code
@@ -131,9 +131,13 @@ const perVerFragShaderCode = `#version 300 es
 precision mediump float;
 out vec4 fragColor;
 uniform vec4 objColor;
-in vec4 vertexColor;
+
+in float Cd;
+in float Cs;
+
 void main() {
-  fragColor = vertexColor*objColor;
+  vec3 perVertexColor = vec3(0.2*objColor + Cd*objColor + Cs);
+  fragColor = vec4(perVertexColor, 1.0);
 }`;
 // Vertex shader code
 const perFragvertexShaderCode = `#version 300 es
@@ -185,8 +189,8 @@ void main() {
 
   float Cd = 1.3*max(0.0,dot(normal,L));
   float Cs = 1.3*pow(max(0.0,dot(R,V)),16.0);
-  vec3 perFragColor = vec3(0.2 + Cd + Cs);
-  fragColor = (vec4(perFragColor, 1.0))*objColor; 
+  vec3 perFragColor = vec3(0.2*objColor + Cd*objColor + Cs);
+  fragColor = (vec4(perFragColor, 1.0)); 
 }`;
 
 function vertexShaderSetup(vertexShaderCode) {
@@ -793,7 +797,6 @@ function onMouseMove(event) {
     var diffY2 = mouseY - prevMouseY;
     prevMouseY = mouseY;
     degree12 = degree12 - diffY2 / 5;
-    drawView2();
     drawScene();
   }
   else if (
